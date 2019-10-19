@@ -1,16 +1,24 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef, useEffect, useContext} from 'react';
 import logo from './logo.svg';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { Row, Col, Container } from 'react-bootstrap';
 import './App.css';
 
+export const UserContext = React.createContext()
+export const AppContext = React.createContext()
 function App() {
   return (
     <div className="App">
-      <Router>
-      <Route exact path="/" component={StateExampleComponent}/>
-      <Route exact path="/useRef" component={UseRefExampleComponent}/>
-      <Route exact path="/useEffect" component={UseEffectExampleComponent}/>
-      </Router>
+      <UserContext.Provider value={'Swastik'}>
+        <AppContext.Provider value={"MyApp"}>
+          <Router>
+          <Route exact path="/" component={StateExampleComponent}/>
+          <Route exact path="/useRef" component={UseRefExampleComponent}/>
+          <Route exact path="/useEffect" component={UseEffectExampleComponent}/>
+          <Route exact path="/useContext" component={AComponent}/>
+          </Router>
+          </AppContext.Provider>
+      </UserContext.Provider>
     </div>
   );
 }
@@ -61,4 +69,75 @@ const UseEffectExampleComponent = () => {
     </div>
   );
 }
+
+const AComponent = () => {
+  return (
+    <div>
+      <Container>
+        <Row>
+          <Col>
+            <BComponent></BComponent>
+          </Col>
+          <Col>
+            <CComponent></CComponent>
+          </Col>
+          <Col>
+            <DComponent></DComponent>
+          </Col>
+        </Row>  
+      </Container>
+    </div>
+  );
+}
+
+const BComponent= () => {
+  return (
+    <div>
+      <p>B Component</p>
+    </div>
+  );
+}
+
+const CComponent= () => {
+  return (
+    <div>
+      <p>C Component</p>
+    </div>
+  );
+}
+
+const DComponent= () => {
+  return (
+    <Col class="md-6">
+      <EComponent></EComponent>
+    </Col>
+  );
+}
+
+const EComponent= () => {
+  return (
+    <Col>
+      <FComponent></FComponent>
+    </Col>
+  );
+}
+
+const FComponent= () => {
+  const user = useContext(UserContext);
+  const app = useContext(AppContext);
+  return (
+    <Col>
+      <p>F Component</p>
+      {/* <UserContext.Consumer>
+        {
+          user =>{
+            return <div>{user}</div>
+          }
+        }
+      </UserContext.Consumer> */ app  } - { user }
+    </Col>
+  );
+}
+
+
 export default App;
