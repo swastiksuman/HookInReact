@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect, useContext} from 'react';
+import React, {useState, useRef, useEffect, useContext, useCallback} from 'react';
 import logo from './logo.svg';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { Row, Col, Container } from 'react-bootstrap';
@@ -16,6 +16,7 @@ function App() {
           <Route exact path="/useRef" component={UseRefExampleComponent}/>
           <Route exact path="/useEffect" component={UseEffectExampleComponent}/>
           <Route exact path="/useContext" component={AComponent}/>
+          <Route exact path="/useCallback" component={UseCallbackComponent}/>
           </Router>
           </AppContext.Provider>
       </UserContext.Provider>
@@ -139,5 +140,41 @@ const FComponent= () => {
   );
 }
 
+const UseCallbackComponent = () => {
+  const [salary, setSalary] = useState(50000);
+  const [age, setAge] = useState(25);
 
+  const incrementAge = useCallback(() => {
+    setAge(age + 1);
+  }, [age])
+  const incrementSalary = useCallback(() => {
+    setSalary(salary+1000);
+  }, [salary]);
+  return (
+    <div>
+      <SmartCount text="Age" count={age} />
+      <SmartButton handleClick={incrementAge}>Increment Age</SmartButton>
+      <SmartCount text="Salary" count={salary} />
+      <SmartButton handleClick={incrementSalary}>Increment Salary</SmartButton>
+  </div>
+  );
+}
+
+const Button = ({ handleClick, children}) => {
+  console.log('Rendering Button ' + children);
+  return(
+    <button onClick={handleClick}>
+      {children}
+    </button>
+  )
+}
+
+const SmartButton = React.memo(Button);
+
+const Count = ({ text, count }) => {
+  console.log(count + "rendered");
+  return <div>{text} - {count}</div>
+}
+
+const SmartCount = React.memo(Count);
 export default App;
